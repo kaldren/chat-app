@@ -1,0 +1,23 @@
+h2 {
+  font-size: 28px;
+  margin: 0 0 20px 0;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  resize: none;
+  min-height: 50px;
+  max-height: 150px;
+  position: relative;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
