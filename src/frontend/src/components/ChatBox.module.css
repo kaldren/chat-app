@@ -88,8 +88,8 @@ textarea {
   box-sizing: border-box;
   border: 1px solid #d1d5db;
   resize: none;
-  min-height: 60px;
-  max-height: 200px;
+  min-height: 30px;
+  max-height: 90px;
   font-family: inherit;
 }
 
