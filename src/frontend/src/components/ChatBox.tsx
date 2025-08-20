@@ -118,6 +118,7 @@ function ChatBox() {
         placeholder='Type your message here...'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyUp={(e) => e.key === 'Enter' && onSubmitMessage()}
       />
 
       <Button variant='contained' color='primary' onClick={onSubmitMessage}>
