@@ -1,7 +1,8 @@
 import { Button } from '@mui/material';
 import styles from './ChatBox.module.css';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 async function* readData(url: string, options: RequestInit) {
   const decoder = new TextDecoder();
@@ -43,34 +44,72 @@ async function* readData(url: string, options: RequestInit) {
 function ChatBox() {
   // Set state
   const [message, setMessage] = useState('');
-  const [response, setResponse] = useState('');
+  const [messageHistory, setMessageHistory] = useState<
+    Array<{ user: string; text: string }>
+  >([]);
+  const [currentResponse, setCurrentResponse] = useState('');
 
   // Send JSON Object where {"message": "Hello"}
   const onSubmitMessage = async () => {
+    const userMsg = { user: 'User', text: message };
+
+    // Add user message to history
+    setMessageHistory((prev) => [...prev, userMsg]);
+
+    // Clear input and prepare for AI response
+    setMessage('');
+    setCurrentResponse('');
+
+    // Stream AI response
+    let aiResponseText = '';
     for await (const chunk of readData('http://localhost:8000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: message,
+        message: userMsg.text,
         thread_id: 'thread_vnutynFwuqo65JGkBM8QFNIe',
         agent_id: 'asst_C4XqPT0ZuRcZ0tPr5UKKTYes',
       }),
     })) {
-      setResponse((prev) => prev + chunk);
+      aiResponseText += chunk;
+      setCurrentResponse(aiResponseText);
     }
 
-    setMessage('');
+    // When streaming is done, add complete AI response to history
+    if (aiResponseText) {
+      const aiMsg = { user: 'AI', text: aiResponseText };
+      setMessageHistory((prev) => [...prev, aiMsg]);
+      setCurrentResponse('');
+    }
   };
 
   return (
     <div className={styles.chatContainer}>
       <div className={styles.chat}>
-        <div className={styles.message}>
-          <span className={styles.user}>AI:</span>
-          <span className={styles.text}>{response}</span>
-        </div>
+        {/* Render message history */}
+        {messageHistory.map((msg, index) => (
+          <div key={index} className={styles.message}>
+            {/* Add styles.user only if msg.user is "User" */}
+            <span
+              className={`${styles.text} ${
+                msg.user === 'User' ? styles.user : styles.ai
+              }`}
+            >
+              <ReactMarkdown>{msg.text}</ReactMarkdown>
+            </span>
+          </div>
+        ))}
+
+        {/* Show current streaming response */}
+        {currentResponse && (
+          <div className={styles.message}>
+            <span className={styles.text}>
+              <ReactMarkdown>{currentResponse}</ReactMarkdown>
+            </span>
+          </div>
+        )}
       </div>
 
       <TextareaAutosize

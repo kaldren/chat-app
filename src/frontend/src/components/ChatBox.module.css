@@ -43,11 +43,21 @@ textarea:focus {
 }
 
 .user {
-  font-weight: bold;
+  display: block;
+  text-align: right;
+  background: #ccc;
+  text-align: center;
+  padding: 0;
 }
 
-.text {
-  margin-left: 0.5rem;
+.ai {
+  text-align: left;
+  background: #eee;
+}
+
+.text p {
+  margin: 0;
+  padding: 0;
 }
 
 .chatContainer button {
