@@ -112,18 +112,20 @@ function ChatBox() {
         )}
       </div>
 
-      <TextareaAutosize
-        minRows={3}
-        maxRows={3}
-        placeholder='Type your message here...'
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyUp={(e) => e.key === 'Enter' && onSubmitMessage()}
-      />
+      <div className={styles.inputbox}>
+        <TextareaAutosize
+          minRows={3}
+          maxRows={3}
+          placeholder='Type your message here...'
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyUp={(e) => e.key === 'Enter' && onSubmitMessage()}
+        />
 
-      <Button variant='contained' color='primary' onClick={onSubmitMessage}>
-        Send
-      </Button>
+        <Button variant='contained' color='primary' onClick={onSubmitMessage}>
+          Send
+        </Button>
+      </div>
     </div>
   );
 }
