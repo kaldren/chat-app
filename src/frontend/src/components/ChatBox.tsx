@@ -84,14 +84,17 @@ function ChatBox() {
     <div className={styles.chatContainer}>
       <div className={styles.chat}>
         {messageHistory.map((msg, index) => (
-          <div key={index} className={styles.message}>
-            <strong>{msg.user}:</strong>
+          <div
+            key={index}
+            className={`${styles.message} ${
+              msg.user === 'User' ? styles.user : styles.ai
+            }`}
+          >
             <ReactMarkdown>{msg.text}</ReactMarkdown>
           </div>
         ))}
         {currentResponse && (
           <div className={styles.message}>
-            <strong>AI:</strong>
             <ReactMarkdown>{currentResponse}</ReactMarkdown>
           </div>
         )}

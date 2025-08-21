@@ -22,6 +22,7 @@
 
 .message {
   margin-bottom: 1.5rem;
+  justify-content: space-between;
 }
 
 textarea {
@@ -47,4 +48,27 @@ button {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
+}
+
+.user {
+  background: rgb(166, 195, 228);
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.user p {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.ai::before {
+  content: "🤖";
+  margin: 0.2rem;
+}
+
+.ai p {
+  padding: 0.25rem 2.25rem;
+  margin: 0;
 }
