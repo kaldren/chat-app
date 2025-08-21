@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import styles from './ChatBox.module.css';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import React, { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 async function* readData(url: string, options: RequestInit) {
@@ -48,6 +48,14 @@ function ChatBox() {
     Array<{ user: string; text: string }>
   >([]);
   const [currentResponse, setCurrentResponse] = useState('');
+
+  // Add a ref for the chat container
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll when messages or currentResponse changes
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messageHistory, currentResponse]);
 
   // Send JSON Object where {"message": "Hello"}
   const onSubmitMessage = async () => {
@@ -110,6 +118,8 @@ function ChatBox() {
             </span>
           </div>
         )}
+        {/* Scroll to the end of the chat */}
+        <div ref={chatEndRef} />
       </div>
 
       <div className={styles.inputbox}>
