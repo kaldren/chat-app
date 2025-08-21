@@ -23,6 +23,8 @@ async def chat(request: Request):
 
     chat = await request.json()
     chat_model = ChatModel(**chat)
+    
+    agent_client.get_agent(agent_id=chat_model.agent_id)
 
     agent_client.messages.create(
         thread_id=chat_model.thread_id,
