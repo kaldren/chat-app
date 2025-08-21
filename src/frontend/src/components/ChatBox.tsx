@@ -65,7 +65,7 @@ function ChatBox() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: userMsg.text,
-        thread_id: 'thread_vnutynFwuqo65JGkBM8QFNIe',
+        thread_id: 'thread_0Qm2TulPTHKX8PGLRA7IZc0g',
         agent_id: 'asst_C4XqPT0ZuRcZ0tPr5UKKTYes',
       }),
     })) {
