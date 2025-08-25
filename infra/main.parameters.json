@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "rgName": { "value": "rg-demo-eus" },
+    "rgLocation": { "value": "eastus" },
+    "containerAppEnvName": { "value": "envdemo82525" },
+    "containerAppName": { "value": "my-container-app" },
+    "containerAppImage": {
+      "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+    }
+  }
+}
