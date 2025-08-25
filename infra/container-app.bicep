@@ -13,6 +13,7 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
         transport: 'Auto'
       }
     }
+    
     environmentId: containerAppEnv.id
     template: {
       containers: [
@@ -33,6 +34,8 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
   }
 }
 
+// Print the FQDN of the container app
+output containerAppFqdn string = containerApp.properties.configuration.ingress.fqdn
 
 // Reference resource containerAppEnv so I can reference containerAppEnv.id
 resource containerAppEnv 'Microsoft.App/managedEnvironments@2025-02-02-preview' existing = {

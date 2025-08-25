@@ -7,13 +7,6 @@ param containerAppName string
 param containerAppImage string
 param suffix string = uniqueString(rgName)
 
-// module rg './resourceGroup.bicep' = {
-//   name: 'rg-deploy-${suffix}'
-//   params: {
-//     rgName: rgName
-//     rgLocation: rgLocation
-//   }
-// }
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: rgName
   location: rgLocation
@@ -26,9 +19,6 @@ module containerAppEnv './container-app-env.bicep' = {
     containerAppEnvName: containerAppEnvName
   }
   scope: resourceGroup(rg.name)
-  dependsOn: [
-    rg
-  ]
 }
 
 module containerApp './container-app.bicep' = {
@@ -43,3 +33,5 @@ module containerApp './container-app.bicep' = {
     containerAppEnv
   ]
 }
+
+output containerAppFqdn string = containerApp.outputs.containerAppFqdn
