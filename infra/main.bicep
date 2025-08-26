@@ -5,6 +5,7 @@ param rgLocation string
 param containerAppEnvName string
 param containerAppName string
 param containerAppImage string
+param containerRegistryName string
 param suffix string = uniqueString(rgName)
 
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
@@ -32,6 +33,14 @@ module containerApp './container-app.bicep' = {
   dependsOn: [
     containerAppEnv
   ]
+}
+
+module containerRegistry './container-registry.bicep' = {
+  name: 'containerRegistryDeploy-${suffix}'
+  params: {
+    containerRegistryName: containerRegistryName
+  }
+  scope: resourceGroup(rg.name)
 }
 
 output containerAppFqdn string = containerApp.outputs.containerAppFqdn

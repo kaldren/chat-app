@@ -8,6 +8,7 @@
     "containerAppName": { "value": "my-container-app" },
     "containerAppImage": {
       "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
-    }
+    },
+    "containerRegistryName": { "value": "crdemoeus82625" }
   }
 }
