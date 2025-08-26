@@ -67,7 +67,6 @@ function ChatBox() {
       body: JSON.stringify({
         message: userMsg.text,
         thread_id: threadId,
-        agent_id: 'asst_7wE0L2Hi30BwLoqY0VTLtD1M',
       }),
     })) {
       aiResponseText += chunk;

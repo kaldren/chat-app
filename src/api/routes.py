@@ -5,6 +5,10 @@ from models.chat import ChatModel
 from azure.ai.projects import AIProjectClient
 from azure.ai.agents.models import AgentEventHandler, MessageDeltaChunk, ThreadMessage, ThreadRun, RunStep, RunStepDeltaChunk, AgentStreamEvent
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 router = fastapi.APIRouter()
 
@@ -28,8 +32,11 @@ async def chat(request: Request):
 
     chat = await request.json()
     chat_model = ChatModel(**chat)
-    
-    agent_client.get_agent(agent_id=chat_model.agent_id)
+
+    # Get agent id from .ENV
+    agent_id = os.getenv("AGENT_ID")
+
+    agent_client.get_agent(agent_id=agent_id)
 
     agent_client.messages.create(
         thread_id=chat_model.thread_id,
@@ -39,9 +46,9 @@ async def chat(request: Request):
 
     def generate_stream():
         try:
-            yield f"data: {json.dumps({'type': 'start', 'thread_id': chat_model.thread_id, 'agent_id': chat_model.agent_id})}\n\n"
-            
-            with agent_client.runs.stream(thread_id=chat_model.thread_id, agent_id=chat_model.agent_id) as stream:
+            yield f"data: {json.dumps({'type': 'start', 'thread_id': chat_model.thread_id, 'agent_id': agent_id})}\n\n"
+
+            with agent_client.runs.stream(thread_id=chat_model.thread_id, agent_id=agent_id) as stream:
                 for event_type, event_data, _ in stream:
 
                     if isinstance(event_data, MessageDeltaChunk):
