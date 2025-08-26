@@ -3,8 +3,8 @@ targetScope = 'subscription'
 param rgName string
 param rgLocation string
 param containerAppEnvName string
-param frontendAppName string
-param frontendAppImage string
+param apiAppName string
+param apiAppImage string
 param containerRegistryName string
 param suffix string = uniqueString(rgName)
 
@@ -22,6 +22,14 @@ module containerRegistry './container-registry.bicep' = {
   scope: resourceGroup(rg.name)
 }
 
+module managedIdentity './managed-identity-acr.bicep' = {
+  name: 'managedIdentityDeploy-${suffix}'
+  params: {
+    containerRegistryName: containerRegistryName
+  }
+  scope: resourceGroup(rg.name)
+}
+
 module containerAppEnv './container-app-env.bicep' = {
   name: 'containerAppEnv-${suffix}'
   params: {
@@ -33,8 +41,8 @@ module containerAppEnv './container-app-env.bicep' = {
 module containerApp './container-app.bicep' = {
   name: 'containerAppDeploy-${suffix}'
   params: {
-    frontendAppName: frontendAppName
-    frontendAppImage: frontendAppImage
+    apiAppName: apiAppName
+    apiAppImage: apiAppImage
     containerAppEnvName: containerAppEnvName
     containerRegistryName: containerRegistryName
   }
@@ -45,4 +53,4 @@ module containerApp './container-app.bicep' = {
   ]
 }
 
-output containerAppFqdn string = containerApp.outputs.frontendAppFqdn
+output containerAppFqdn string = containerApp.outputs.apiAppFqdn

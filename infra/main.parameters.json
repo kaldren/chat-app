@@ -5,9 +5,9 @@
     "rgName": { "value": "rg-demo-eus" },
     "rgLocation": { "value": "eastus" },
     "containerAppEnvName": { "value": "envdemo82525" },
-    "frontendAppName": { "value": "frontend" },
-    "frontendAppImage": {
-      "value": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+    "apiAppName": { "value": "api" },
+    "apiAppImage": {
+      "value": "crdemoeus82625.azurecr.io/api:latest"
     },
     "containerRegistryName": { "value": "crdemoeus82625" }
   }

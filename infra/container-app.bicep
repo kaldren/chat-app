@@ -1,25 +1,28 @@
-param frontendAppName string
-param frontendAppImage string
+param apiAppName string
+param apiAppImage string
 param containerAppEnvName string
 param containerRegistryName string
 
-resource frontendApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
-  name: frontendAppName
+resource apiApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
+  name: apiAppName
   location: resourceGroup().location
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
   }
   properties: {
     configuration: {
       ingress: {
         external: true
-        targetPort: 80
+        targetPort: 8000
         transport: 'Auto'
       }
       registries: [
         {
           server: '${containerRegistry.name}.azurecr.io'
-          identity: 'system'
+          identity: managedIdentity.id
         }
       ]
     }
@@ -28,8 +31,8 @@ resource frontendApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
     template: {
       containers: [
         {
-          name: frontendAppName
-          image: frontendAppImage
+          name: apiAppName
+          image: apiAppImage
           resources: {
             cpu: json('0.5')
             memory: '1Gi'
@@ -44,22 +47,8 @@ resource frontendApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
   }
 }
 
-// AcrPull role on the registry for this container app identity
-resource acrPullFrontend 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(containerRegistry.id, frontendApp.id, 'acrpull-frontend')
-  scope: containerRegistry
-  properties: {
-    roleDefinitionId: subscriptionResourceId(
-      'Microsoft.Authorization/roleDefinitions',
-      '7f951dda-4ed3-4680-a7ca-43fe172d538d' // AcrPull
-    )
-    principalId: frontendApp.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
-// Print the FQDN of the frontend app
-output frontendAppFqdn string = frontendApp.properties.configuration.ingress.fqdn
+// Print the FQDN of the API app
+output apiAppFqdn string = apiApp.properties.configuration.ingress.fqdn
 
 // Reference resource containerAppEnv so I can reference containerAppEnv.id
 resource containerAppEnv 'Microsoft.App/managedEnvironments@2025-02-02-preview' existing = {
@@ -69,4 +58,9 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2025-02-02-preview' 
 // Reference Container Registry
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-05-01-preview' existing = {
   name: containerRegistryName
+}
+
+// Reference Managed Identity
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2025-01-31-preview' existing = {
+  name: 'acrManagedIdentity'
 }
