@@ -15,6 +15,11 @@ def get_ai_project(request: fastapi.Request) -> AIProjectClient:
 async def hi():
     return {"message": "Hello from the /hi endpoint!"}
 
+@router.get("/new-thread")
+async def create_thread(request: Request):
+    client = get_ai_project(request)
+    thread = client.agents.threads.create()
+    return {"thread_id": thread.id}
 
 @router.post("/api/chat")
 async def chat(request: Request):

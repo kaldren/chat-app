@@ -54,6 +54,7 @@ function ChatBox() {
   }, [messageHistory, currentResponse]);
 
   const onSubmitMessage = async () => {
+    const threadId = await GetThreadId();
     const userMsg = { user: 'User', text: message };
     setMessageHistory((prev) => [...prev, userMsg]);
     setMessage('');
@@ -65,8 +66,8 @@ function ChatBox() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: userMsg.text,
-        thread_id: 'thread_0Qm2TulPTHKX8PGLRA7IZc0g',
-        agent_id: 'asst_C4XqPT0ZuRcZ0tPr5UKKTYes',
+        thread_id: threadId,
+        agent_id: 'asst_7wE0L2Hi30BwLoqY0VTLtD1M',
       }),
     })) {
       aiResponseText += chunk;
@@ -120,6 +121,25 @@ function ChatBox() {
       </div>
     </div>
   );
+}
+
+async function GetThreadId() {
+  const thread_id = localStorage.getItem('thread_id');
+
+  // Include undefined check
+  if (thread_id === 'undefined' || thread_id === null) {
+    // If no thread_id is found, create a new thread
+    const response = await fetch('http://localhost:8000/new-thread', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await response.json();
+    console.log(data);
+    localStorage.setItem('thread_id', data.thread_id);
+    return data.thread_id;
+  }
+  console.log(thread_id);
+  return thread_id;
 }
 
 export default ChatBox;
