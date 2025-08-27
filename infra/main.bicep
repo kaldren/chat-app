@@ -8,6 +8,7 @@ param apiAppImage string
 param containerRegistryName string
 param aiFoundryName string
 param aiProjectName string
+param chatAgentModel string
 param suffix string = substring(uniqueString(rgName), 0, 4)
 param deployContainerApp bool = false
 
@@ -38,6 +39,7 @@ module aifoundry './aifoundry.bicep' = {
   params: {
     aiFoundryName: aiFoundryName
     aiProjectName: aiProjectName
+    chatAgentModel: chatAgentModel
   }
   scope: resourceGroup(rg.name)
   dependsOn: [

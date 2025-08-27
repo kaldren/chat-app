@@ -1,5 +1,6 @@
 param aiFoundryName string
 param aiProjectName string
+param chatAgentModel string
 
 resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
   name: aiFoundryName
@@ -34,14 +35,14 @@ resource aiProject 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-pre
 
 resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview'= {
   parent: aiFoundry
-  name: 'gpt-4o'
+  name: chatAgentModel
   sku : {
     capacity: 1
     name: 'GlobalStandard'
   }
   properties: {
     model:{
-      name: 'gpt-4o'
+      name: chatAgentModel
       format: 'OpenAI'
     }
   }

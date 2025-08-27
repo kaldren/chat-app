@@ -15,6 +15,7 @@
     },
     "aiProjectName": {
       "value": "project1"
-    }
+    },
+    "chatAgentModel": { "value": "gpt-4o" }
   }
 }
