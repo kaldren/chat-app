@@ -1,5 +1,5 @@
 param aiFoundryName string
-param aiProjectName string
+param aiFoundryProjectName string
 param chatAgentModel string
 
 resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
@@ -21,7 +21,7 @@ resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
 }
 
 resource aiProject 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' = {
-  name: aiProjectName
+  name: aiFoundryProjectName
   location: resourceGroup().location
   properties: {
     displayName: 'project'

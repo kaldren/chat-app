@@ -21,9 +21,12 @@ async def hi():
 
 @router.get("/new-thread")
 async def create_thread(request: Request):
-    client = get_ai_project(request)
-    thread = client.agents.threads.create()
-    return {"thread_id": thread.id}
+    try:
+        client = get_ai_project(request)
+        thread = client.agents.threads.create()
+        return {"thread_id": thread.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/api/chat")
 async def chat(request: Request):
@@ -33,10 +36,9 @@ async def chat(request: Request):
     chat = await request.json()
     chat_model = ChatModel(**chat)
 
-    # Get agent id from .ENV
-    agent_id = os.getenv("AGENT_ID")
+    agent = agent_client.get_agent(os.getenv("AGENT_NAME"))
 
-    agent_client.get_agent(agent_id=agent_id)
+    agent_client.get_agent(agent_id=agent.id)
 
     agent_client.messages.create(
         thread_id=chat_model.thread_id,

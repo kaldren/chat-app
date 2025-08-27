@@ -1,5 +1,8 @@
 param apiAppName string
 param apiAppImage string
+param aiFoundryName string
+param aiFoundryProjectName string
+param aiFoundryChatAgentName string
 param containerAppEnvName string
 param containerRegistryName string
 
@@ -37,6 +40,16 @@ resource apiApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
             cpu: json('0.5')
             memory: '1Gi'
           }
+          env: [
+            {
+              name: 'AI_FOUNDRY_ENDPOINT'
+              value: 'https://${aiFoundryName}.services.ai.azure.com/api/projects/${aiFoundryProjectName}'
+            }
+            {
+              name: 'AGENT_NAME'
+              value: aiFoundryChatAgentName
+            }
+          ]
         }
       ]
       scale: {

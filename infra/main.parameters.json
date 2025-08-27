@@ -13,9 +13,10 @@
     "aiFoundryName": {
       "value": "aifoundry8"
     },
-    "aiProjectName": {
+    "aiFoundryProjectName": {
       "value": "project1"
     },
+    "aiFoundryChatAgentName": { "value": "AISolutionAdvisorAgent" },
     "chatAgentModel": { "value": "gpt-4o" }
   }
 }
