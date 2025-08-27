@@ -6,41 +6,43 @@ resource aiFoundry 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
   location: resourceGroup().location
   kind: 'AIServices'
   identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
+    type: 'SystemAssigned'
   }
   sku: {
     name: 'S0'
   }
   properties: {
     publicNetworkAccess: 'Enabled'
-    customSubDomainName: 'aifoundry${uniqueString(resourceGroup().id)}'
+    customSubDomainName: aiFoundryName
     allowProjectManagement: true
+    disableLocalAuth: false
   }
 }
 
-resource aiProject 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
+resource aiProject 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' = {
   name: aiProjectName
   location: resourceGroup().location
   properties: {
+    displayName: 'project'
     description: 'AI Foundry Project'
   }
   identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
+    type: 'SystemAssigned'
+  }
+  parent: aiFoundry
+}
+
+resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview'= {
+  parent: aiFoundry
+  name: 'gpt-4o'
+  sku : {
+    capacity: 1
+    name: 'GlobalStandard'
+  }
+  properties: {
+    model:{
+      name: 'gpt-4o'
+      format: 'OpenAI'
     }
   }
-  dependsOn: [
-    aiFoundry
-    managedIdentity
-  ]
 }
-
-// Reference Managed Identity
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2025-01-31-preview' existing = {
-  name: 'acrManagedIdentity'
-}
-

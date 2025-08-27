@@ -37,7 +37,7 @@ module aifoundry './aifoundry.bicep' = {
   name: 'aiFoundryDeploy-${suffix}'
   params: {
     aiFoundryName: aiFoundryName
-    aiProjectName: '${aiFoundryName}/${aiProjectName}'
+    aiProjectName: aiProjectName
   }
   scope: resourceGroup(rg.name)
   dependsOn: [
