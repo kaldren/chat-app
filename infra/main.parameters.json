@@ -2,13 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "rgName": { "value": "rg-demo-eus" },
+    "rgName": { "value": "rg-aidemo-eus" },
     "rgLocation": { "value": "eastus" },
     "containerAppEnvName": { "value": "envdemo82525" },
     "apiAppName": { "value": "api" },
     "apiAppImage": {
       "value": "crdemoeus82625.azurecr.io/api:latest"
     },
-    "containerRegistryName": { "value": "crdemoeus82625" }
+    "containerRegistryName": { "value": "crdemoeus82625" },
+    "aiFoundryName": {
+      "value": "aifoundry82525"
+    },
+    "aiProjectName": {
+      "value": "project1"
+    }
   }
 }

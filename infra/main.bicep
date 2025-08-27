@@ -6,7 +6,10 @@ param containerAppEnvName string
 param apiAppName string
 param apiAppImage string
 param containerRegistryName string
-param suffix string = uniqueString(rgName)
+param aiFoundryName string
+param aiProjectName string
+param suffix string = substring(uniqueString(rgName), 0, 4)
+param deployContainerApp bool = false
 
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: rgName
@@ -15,7 +18,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
 }
 
 module containerRegistry './container-registry.bicep' = {
-  name: 'containerRegistryDeploy-${suffix}'
+  name: 'containerRegistryDeploy${suffix}'
   params: {
     containerRegistryName: containerRegistryName
   }
@@ -30,15 +33,27 @@ module managedIdentity './managed-identity-acr.bicep' = {
   scope: resourceGroup(rg.name)
 }
 
+module aifoundry './aifoundry.bicep' = {
+  name: 'aiFoundryDeploy-${suffix}'
+  params: {
+    aiFoundryName: aiFoundryName
+    aiProjectName: '${aiFoundryName}/${aiProjectName}'
+  }
+  scope: resourceGroup(rg.name)
+  dependsOn: [
+    managedIdentity
+  ]
+}
+
 module containerAppEnv './container-app-env.bicep' = {
-  name: 'containerAppEnv-${suffix}'
+  name: 'containerAppEnv${suffix}'
   params: {
     containerAppEnvName: containerAppEnvName
   }
   scope: resourceGroup(rg.name)
 }
 
-module containerApp './container-app.bicep' = {
+module containerApp './container-app.bicep' = if (deployContainerApp) {
   name: 'containerAppDeploy-${suffix}'
   params: {
     apiAppName: apiAppName
@@ -50,7 +65,9 @@ module containerApp './container-app.bicep' = {
   dependsOn: [
     containerAppEnv
     containerRegistry
+    managedIdentity
   ]
 }
 
-output containerAppFqdn string = containerApp.outputs.apiAppFqdn
+// Only print this if containerApp is deployed: 
+output containerAppFqdn string = (deployContainerApp ? containerApp.outputs.apiAppFqdn : '')
