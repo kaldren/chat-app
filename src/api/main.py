@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
 
     ai_project = AIProjectClient(
     endpoint=os.getenv("AI_FOUNDRY_ENDPOINT"),
-    credential=ManagedIdentityCredential(client_id="86c67e45-9be2-4821-8d6b-d2c6f9f97928"))
+    credential=ManagedIdentityCredential(client_id=os.getenv("MANAGED_IDENTITY_ID")))
 
     agent_name = os.getenv("AGENT_NAME")
     agent_exists = False
@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
             agent_exists = True
 
     if (not agent_exists):
-        ai_project.agents.create_agent(name=agent_name, model="gpt-4o", instructions="""
+        ai_project.agents.create_agent(name=agent_name, model=os.getenv("AGENT_MODEL"), instructions="""
         You are the AI Solution Advisor Agent.
         Your job is to help business users understand whether their requirement is best solved by:
 
